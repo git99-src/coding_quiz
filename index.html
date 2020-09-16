@@ -8,12 +8,15 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 </head>
 <body>
-    
+    <form class="navbar-form" role="scoretimer">
+        <div id ="time" class="float-right">
+         </div>
+    </form>
     <div class="container">
         <div id = "time"></div>
 
-        <p>Press start to begin quiz. You will have 30 seconds to complete quiz.  Click on the answer the is correct.  Each incorrect answer will take 5 seconds off the clock. </p>
-        <p>The quiz will end when there is no time left or you have answered all the questions</p>
+        <h1 id="instructions">Press start to begin quiz. You will have 30 seconds to complete quiz.  Click on the answer the is correct.  Each incorrect answer will take 5 seconds off the clock.
+        The quiz will end when there is no time left or you have answered all the questions</h1>
 
         <button id="start">Start</button> 
         <h2 id = "ask-question"></h2>

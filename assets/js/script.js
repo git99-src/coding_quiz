@@ -1,10 +1,14 @@
 
 // create references to dom elements
 var startEl = document.querySelector("#start");
-var timeEl = document.getElementById(".time");
+var timeEl = document.getElementById("time");
 var questionViewEl = document.getElementById("ask-question");
 var answersViewEl = document.getElementById("list-answers");
 var correctViewEl = document.getElementById("correctAnswer");
+var instructionsEl = document.getElementById("instructions");
+var buttonE1l = document.getElementById("start");
+var isCorrect = " ";
+var answerCorrectly = false;
 
 var questions = [
   {
@@ -33,34 +37,50 @@ var questions = [
   },
 ];
 function displayQuestion(question) {
-  
+  resetQuestion();
   questionViewEl.innerHTML =
       "<h2>" + question.questionMain + "</h2>"; 
   answersViewEl.innerHTML =
       "<li>" + question.answerOne + "</li>" +
       "<li>" + question.answerTwo + "</li>" +
       "<li>" + question.answerThree + "</li>" +
-      "<li>" + question.answerFour + "</li>";
-  
+      "<li>" + question.answerFour + "</li>"; 
+     
+     isCorrect = question.correct;
+      
+};
+
+function resetQuestion(){
+  questionViewEl.innerHTML = " ";
+  answersViewEl.innerHTML = " ";
 };
 
 // user clicked on answer
 answersViewEl.addEventListener("click",function(event) {
-  var element = event.target
-  console.log(element)
-  
+  var element = event.target.textContent
+  console.log(isCorrect)
+  console.log (element)
+  answerCorrectly = false;
+  //is the answer correct?
+   if (isCorrect === (element)){
+    alert("correct answer");
+    answerCorrectly = true;
+    
+   }
 
+  displayQuestion(questions[1]);
+ 
+  });
 
-});
-// create variable to keep track of the time
-var secondsLeft = 30;
 
 // Updates the displayed count
 function setTime() {
-  // start countdown
 
+  // start countdown
+  // create variable to keep track of the time
+  var secondsLeft = 10;
   var timerInterval = setInterval(function() {
-    
+    if (secondsLeft > 0) {
     // each interval we....
     
     // decrement time remaining
@@ -68,12 +88,16 @@ function setTime() {
 
     // update the count down
     //timeEl.textContent = secondsLeft + " seconds left";
+    timeEl.innerHTML = secondsLeft + " seconds left";
 
+    } else {
     // check if time has run out
-    if(secondsLeft === 0) {
+    
       // stop the interval by passing the identifier returned by setInterval to
       // the clearInterval method.
       clearInterval(timerInterval);
+      alert("game over");
+      //display score
     }
 
   }, 1000);
@@ -83,9 +107,12 @@ function setTime() {
 // increment count and update the display each time the
 // user clicks the increment button
 startEl.addEventListener("click", function() {
- console.log ("lello")
- setTime();
- displayQuestion(questions[1]);
+  instructionsEl.innerHTML = " ";
+  startEl.remove();
+  setTime();
+    // display question
+  displayQuestion(questions[1]);
+ ;
 });
 
 
