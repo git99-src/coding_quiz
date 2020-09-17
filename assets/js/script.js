@@ -4,11 +4,17 @@ var startEl = document.querySelector("#start");
 var timeEl = document.getElementById("time");
 var questionViewEl = document.getElementById("ask-question");
 var answersViewEl = document.getElementById("list-answers");
-var correctViewEl = document.getElementById("correctAnswer");
 var instructionsEl = document.getElementById("instructions");
-var buttonE1l = document.getElementById("start");
+var startEl = document.getElementById("startQuiz");
+var listEl = document.getElementById("list");
+var itemsEl = document.getElementById("list-group-item");
 var isCorrect = " ";
 var answerCorrectly = false;
+var items = [];
+var totalCorrect = 0;
+var totalQuestions = 0;
+var secondsLeft = 10;
+
 
 var questions = [
   {
@@ -36,67 +42,100 @@ var questions = [
     correct: "one"
   },
 ];
-function displayQuestion(question) {
-  resetQuestion();
-  questionViewEl.innerHTML =
-      "<h2>" + question.questionMain + "</h2>"; 
-  answersViewEl.innerHTML =
-      "<li>" + question.answerOne + "</li>" +
-      "<li>" + question.answerTwo + "</li>" +
-      "<li>" + question.answerThree + "</li>" +
-      "<li>" + question.answerFour + "</li>"; 
-     
-     isCorrect = question.correct;
+function loadArrayItems(question) {
+  
+  items = [];
+  items.push(question.questionMain);
+  items.push(question.answerOne);
+  items.push(question.answerTwo);
+  items.push(question.answerThree);
+  items.push(question.answerFour);
+  isCorrect = question.correct
+  console.log (items)
+};
+// function displayQuestion(question) {
+  function displayQuestion() {
+    resetQuestion(); 
+  //are there more questions?  
+  if (totalQuestions < 4){
+          
+    loadArrayItems(questions[totalQuestions]);
+  } else {
+    alert("no more questions - game over")
+    // when the user returns to the page
+    localStorage.setItem("count", totalCorrect);
+  };
+  for (var i = 0; i < items.length; i++) {
+    // render question here
+    if (i === 0){
+      var newLiEl = document.createElement("LI");
+      newLiEl.textContent = items[i];
+      listEl.appendChild(newLiEl);
+    } else {
+    // render answer buttons here  
+    var itemBtnEl = document.createElement("BUTTON");
+    itemBtnEl.classList ="btn btn-secondary item-button";
+    itemBtnEl.textContent = items[i];
+
+    newLiEl = document.createElement("LI");
+    newLiEl.setAttribute("class", "list-group-item")
+    newLiEl.appendChild(itemBtnEl);
+    listEl.appendChild(newLiEl);
+   };
+  ;}
+  
+  listEl.addEventListener("click", function(event) {
+    if (event.target.matches(".item-button"))
+      if (isCorrect === event.target.textContent){
+      // good answer  
+      alert("correct");
+      totalCorrect++
+      totalQuestions++
+      displayQuestion();
+
+      } else {
+       // incorrect answer 
+       alert("incorrect");
+       secondsLeft = secondsLeft - 5
+       totalQuestions++
+       displayQuestion();
+
+     }; 
+ 
+    });
+   
       
 };
 
 function resetQuestion(){
-  questionViewEl.innerHTML = " ";
-  answersViewEl.innerHTML = " ";
+  instructionsEl.innerHTML = " ";
+
 };
 
-// user clicked on answer
-answersViewEl.addEventListener("click",function(event) {
-  var element = event.target.textContent
-  console.log(isCorrect)
-  console.log (element)
-  answerCorrectly = false;
-  //is the answer correct?
-   if (isCorrect === (element)){
-    alert("correct answer");
-    answerCorrectly = true;
-    
-   }
-
-  displayQuestion(questions[1]);
- 
-  });
-
-
-// Updates the displayed count
+// start time
 function setTime() {
 
   // start countdown
   // create variable to keep track of the time
-  var secondsLeft = 10;
+  secondsLeft = 60;
   var timerInterval = setInterval(function() {
     if (secondsLeft > 0) {
-    // each interval we....
+    
     
     // decrement time remaining
     secondsLeft--;
 
     // update the count down
-    //timeEl.textContent = secondsLeft + " seconds left";
     timeEl.innerHTML = secondsLeft + " seconds left";
 
     } else {
     // check if time has run out
     
-      // stop the interval by passing the identifier returned by setInterval to
       // the clearInterval method.
       clearInterval(timerInterval);
       alert("game over");
+      // when the user returns to the page
+      localStorage.setItem("count", totalCorrect);
       //display score
     }
 
@@ -104,15 +143,18 @@ function setTime() {
   //countEl.textContent = count;
 }
 
+
 // increment count and update the display each time the
 // user clicks the increment button
 startEl.addEventListener("click", function() {
-  instructionsEl.innerHTML = " ";
-  startEl.remove();
+  // instructionsEl.innerHTML = " ";
+  startEl.setAttribute("hidden", true);
   setTime();
+  displayQuestion();
     // display question
-  displayQuestion(questions[1]);
- ;
+  // displayQuestion(questions[1]);
+ 
+ 
 });
 
 
